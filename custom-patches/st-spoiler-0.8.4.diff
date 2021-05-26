@@ -1,0 +1,39 @@
+From 58d83782292aaf9937b94f0b7f24e893d3e74670 Mon Sep 17 00:00:00 2001
+From: PratikBhusal <PratikBhusal@users.noreply.github.com>
+Date: Mon, 24 May 2021 22:44:27 -0500
+Subject: [PATCH] Invert fg/bg selection when they are the same
+
+This patch is the exact same as the 20180309-c5ba9c0 patch by dequis -
+dx (at) dxzone (dot) com (dot) ar
+
+Because it follows the "git --format-patch" file format, you may also
+use "git am" to apply this patch.
+---
+ x.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/x.c b/x.c
+index 5cf7355..92bf724 100644
+--- a/x.c
++++ b/x.c
+@@ -1451,9 +1451,14 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
+ 	}
+ 
+ 	if (base.mode & ATTR_REVERSE) {
+-		temp = fg;
+-		fg = bg;
+-		bg = temp;
++		if (bg == fg) {
++			bg = &dc.col[defaultfg];
++			fg = &dc.col[defaultbg];
++		} else {
++			temp = fg;
++			fg = bg;
++			bg = temp;
++		}
+ 	}
+ 
+ 	if (base.mode & ATTR_BLINK && win.mode & MODE_BLINK)
+-- 
+2.31.1
+
