@@ -41,7 +41,7 @@ if [ -s custom-patches/st-clipboard-0.8.4.diff ]; then
 fi
 # Clipboard }}}
 # Bold is Not Bright {{{
-if [ ! -s bolt-is-not-bright.diff  ]; then
+if [ ! -s bold-is-not-bright.diff  ]; then
     curl \
         https://st.suckless.org/patches/bold-is-not-bright/st-bold-is-not-bright-20190127-3be4cf1.diff \
         -o bold-is-not-bright.diff
