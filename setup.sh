@@ -1,10 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 if [ -d st-0.8.4/ ]; then
     echo "st folder already exists."
-    read -r -p "Delete folder and re-patch? (y/N): " user_input
+    printf "Delete folder and re-patch? (y/N): "
+    read -r user_input
 
-    if [[  -z "$user_input" ||  ! "$user_input" =~ (y|Y) ]]; then
+    if [  -z "$user_input" ] || echo "$user_input" | grep -E '^[^Yy]$' > /dev/null; then
         exit
     else
         echo "Deleting st-0.8.4 folder"
