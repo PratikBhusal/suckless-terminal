@@ -104,6 +104,13 @@ if [ -s custom-patches/st-vertcenter-0.8.4.diff ]; then
         && cd ../
 fi
 # Vertical Center }}}
+# Wide Glyphs {{{
+if [ -s custom-patches/st-wideglyph-0.8.4.diff ]; then
+    cd st-0.8.4 \
+        && git am -3 ../custom-patches/st-wideglyph-0.8.4.diff \
+        && cd ../
+fi
+# Wide Glyphs }}}
 # Hide Cursor {{{
 if [ -s custom-patches/st-hidecursor-0.8.4.diff ]; then
     cd st-0.8.4 \
@@ -118,7 +125,7 @@ if [ ! -s xresources.diff  ]; then
         -o xresources.diff
 fi
 cd st-0.8.4 \
-    && git apply -3 ../xresources.diff \
+    && git am -3 ../xresources.diff \
     && cd ../
 # Xresources }}}
 # Synchronized Rendering {{{
@@ -128,7 +135,7 @@ if [ ! -s appsync.diff  ]; then
         -o appsync.diff
 fi
 cd st-0.8.4 \
-    && git apply -3 ../appsync.diff \
+    && git am -3 ../appsync.diff \
     && cd ../
 # Synchronized Rendering }}}
 # Patch Suckless Simple Terminal }}} --------------------------------------------
