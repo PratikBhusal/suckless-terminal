@@ -1,4 +1,4 @@
-From b9f162ecf8df2e180f85c23c9511dac20429872b Mon Sep 17 00:00:00 2001
+From 4f40caa40df087b34e2d1f679ec1a3a2639079a4 Mon Sep 17 00:00:00 2001
 From: PratikBhusal <PratikBhusal@users.noreply.github.com>
 Date: Sat, 22 May 2021 22:45:06 -0500
 Subject: [PATCH] Set clipboard selection to match primary selection
@@ -13,10 +13,10 @@ use "git am" to apply this patch.
  1 file changed, 1 insertion(+)
 
 diff --git a/x.c b/x.c
-index 4988181..cdead90 100644
+index 2a3bd38..5a74804 100644
 --- a/x.c
 +++ b/x.c
-@@ -679,6 +679,7 @@ setsel(char *str, Time t)
+@@ -686,6 +686,7 @@ setsel(char *str, Time t)
  	XSetSelectionOwner(xw.dpy, XA_PRIMARY, xw.win, t);
  	if (XGetSelectionOwner(xw.dpy, XA_PRIMARY) != xw.win)
  		selclear();
@@ -25,5 +25,5 @@ index 4988181..cdead90 100644
  
  void
 -- 
-2.31.1
+2.43.0
 

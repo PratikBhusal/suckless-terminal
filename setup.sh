@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-if [ -d st-0.8.4/ ]; then
+if [ -d st-0.9/ ]; then
     echo "st folder already exists."
     printf "Delete folder and re-patch? (y/N): "
     read -r user_input
@@ -8,36 +8,34 @@ if [ -d st-0.8.4/ ]; then
     if [  -z "$user_input" ] || echo "$user_input" | grep -E '^[^Yy]$' > /dev/null; then
         exit
     else
-        echo "Deleting st-0.8.4 folder"
-        \rm -rf st-0.8.4/
+        echo "Deleting st-0.9 folder"
+        \rm -rf st-0.9/
     fi
 fi
 
-git clone --depth 1 --branch 0.8.4 https://git.suckless.org/st st-0.8.4
-ln -s ../config.h st-0.8.4/config.h
+# use --depth 2 when debugging
+git clone --depth 1 --branch 0.9 https://git.suckless.org/st st-0.9
+ln -s ../config.h st-0.9/config.h
 
 # Patch Suckless Simple Terminal {{{ --------------------------------------------
 # Boxdraw {{{
-if [ ! -s boxdraw.diff  ]; then
-    curl \
-        https://st.suckless.org/patches/boxdraw/st-boxdraw_v2-0.8.3.diff \
-        -o boxdraw.diff
+if [ -s custom-patches/st-boxdraw-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-boxdraw-0.9.diff \
+        && cd ../
 fi
-cd st-0.8.4 \
-    && git am -3 ../boxdraw.diff \
-    && cd ../
 # Boxdraw }}}
 # Ligatures {{{
-if [ -s custom-patches/st-ligatures-boxdraw-0.8.4.diff ]; then
-    cd st-0.8.4 \
-        && git am -3 ../custom-patches/st-ligatures-boxdraw-0.8.4.diff \
+if [ -s custom-patches/st-ligatures-boxdraw-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-ligatures-boxdraw-0.9.diff \
         && cd ../
 fi
 # Ligatures }}}
 # Clipboard {{{
-if [ -s custom-patches/st-clipboard-0.8.4.diff ]; then
-    cd st-0.8.4 \
-        && git am -3 ../custom-patches/st-clipboard-0.8.4.diff \
+if [ -s custom-patches/st-clipboard-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-clipboard-0.9.diff \
         && cd ../
 fi
 # Clipboard }}}
@@ -47,96 +45,82 @@ if [ ! -s bold-is-not-bright.diff  ]; then
         https://st.suckless.org/patches/bold-is-not-bright/st-bold-is-not-bright-20190127-3be4cf1.diff \
         -o bold-is-not-bright.diff
 fi
-cd st-0.8.4 \
+cd st-0.9 \
     && git am -3 ../bold-is-not-bright.diff \
     && cd ../
 # Bold is Not Bright }}}
 # X Clear Window Before Redraw {{{
-if [ ! -s xclearwin.diff  ]; then
-    curl \
-        https://st.suckless.org/patches/xclearwin/st-xclearwin-20200419-6ee7143.diff \
-        -o xclearwin.diff
+if [ -s custom-patches/st-xclearwin-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-xclearwin-0.9.diff \
+        && cd ../
 fi
-cd st-0.8.4 \
-    && git am -3 ../xclearwin.diff \
-    && cd ../
 # X Clear Window Before Redraw }}}
 # Spoiler {{{
-if [ -s custom-patches/st-spoiler-0.8.4.diff ]; then
-    cd st-0.8.4 \
-        && git am -3 ../custom-patches/st-spoiler-0.8.4.diff \
+if [ -s custom-patches/st-spoiler-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-spoiler-0.9.diff \
         && cd ../
 fi
 # Spoiler }}}
 # XDG Desktop Entry {{{
 if [ ! -s desktopentry.diff  ]; then
     curl \
-        https://st.suckless.org/patches/desktopentry/st-desktopentry-0.8.4.diff \
+        https://st.suckless.org/patches/desktopentry/st-desktopentry-0.8.5.diff \
         -o desktopentry.diff
 fi
 
-cd st-0.8.4 \
+cd st-0.9 \
     && git am -3 ../desktopentry.diff \
     && cd ../
 # XDG Desktop Entry }}}
 # Net Window Manager Icon {{{
-if [ ! -s netwmicon.diff  ]; then
-    curl \
-        https://st.suckless.org/patches/netwmicon/st-netwmicon-0.8.4.diff \
-        -o netwmicon.diff
+if [ ! -s st.png  ]; then
+    curl -O \
+        https://st.suckless.org/patches/netwmicon/st.png
 fi
+cp st.png st-0.9/
 
-cd st-0.8.4 \
-    && git am -3 ../netwmicon.diff \
-    && cd ../
+if [ -s custom-patches/st-netwmicon-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-netwmicon-0.9.diff \
+        && cd ../
+fi
 # Net Window Manager Icon }}}
 # Any Size {{{
-if [ -s custom-patches/st-anysize-0.8.4.diff ]; then
-    cd st-0.8.4 \
-        && git am -3 ../custom-patches/st-anysize-0.8.4.diff \
+if [ -s custom-patches/st-anysize-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-anysize-0.9.diff \
         && cd ../
 fi
 # Any Size }}}
 # Vertical Center {{{
-if [ -s custom-patches/st-vertcenter-0.8.4.diff ]; then
-    cd st-0.8.4 \
-        && git am -3 ../custom-patches/st-vertcenter-0.8.4.diff \
+if [ -s custom-patches/st-vertcenter-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-vertcenter-0.9.diff \
         && cd ../
 fi
 # Vertical Center }}}
-# Wide Glyphs {{{
-if [ -s custom-patches/st-wideglyph-0.8.4.diff ]; then
-    cd st-0.8.4 \
-        && git am -3 ../custom-patches/st-wideglyph-0.8.4.diff \
-        && cd ../
-fi
-# Wide Glyphs }}}
 # Hide Cursor {{{
-if [ -s custom-patches/st-hidecursor-0.8.4.diff ]; then
-    cd st-0.8.4 \
-        && git am -3 ../custom-patches/st-hidecursor-0.8.4.diff \
+if [ -s custom-patches/st-hidecursor-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-hidecursor-0.9.diff \
         && cd ../
 fi
 # Hide Cursor }}}
 # Xresources {{{
-if [ ! -s xresources.diff  ]; then
-    curl \
-        https://st.suckless.org/patches/xresources/st-xresources-20200604-9ba7ecf.diff \
-        -o xresources.diff
+if [ -s custom-patches/st-xresources-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-xresources-0.9.diff \
+        && cd ../
 fi
-cd st-0.8.4 \
-    && git am -3 ../xresources.diff \
-    && cd ../
 # Xresources }}}
 # Synchronized Rendering {{{
-if [ ! -s appsync.diff  ]; then
-    curl \
-        https://st.suckless.org/patches/sync/st-appsync-20200618-b27a383.diff \
-        -o appsync.diff
+if [ -s custom-patches/st-appsync-0.9.diff ]; then
+    cd st-0.9 \
+        && git am -3 ../custom-patches/st-appsync-0.9.diff \
+        && cd ../
 fi
-cd st-0.8.4 \
-    && git am -3 ../appsync.diff \
-    && cd ../
 # Synchronized Rendering }}}
 # Patch Suckless Simple Terminal }}} --------------------------------------------
 
@@ -147,24 +131,30 @@ cd st-0.8.4 \
 # TODO: ligatures (depends on scrollback & boxdraw patch)
 
 # # Relative Border {{{
-# if [ -s custom-patches/st-relativeborder-0.8.4.diff  ]; then
-#     cd st-0.8.4 \
-#         && git am -3 ../custom-patches/st-relativeborder-0.8.4.diff \
+# if [ -s custom-patches/st-relativeborder-0.9.diff  ]; then
+#     cd st-0.9 \
+#         && git am -3 ../custom-patches/st-relativeborder-0.9.diff \
 #         && cd ../
 # fi
 # # Relative Border }}}
 # # Relative border {{{
 # if [ ! -s relativeborder.diff  ]; then
 #     curl \
-#         https://st.suckless.org/patches/relativeborder/st-relativeborder-0.8.3.diff \
+#         https://st.suckless.org/patches/relativeborder/st-relativeborder-0.9.diff \
 #         -o relativeborder.diff
 # fi
 
-# cd st-0.8.4 \
+# cd st-0.9 \
 #     && git apply -3 ../relativeborder.diff \
 #     && cd ../
 # # Relative border }}}
-
+# # Wide Glyphs - disabled due to difficulties patching on top of ligatures {{{
+# if [ -s custom-patches/st-wideglyph-0.9.diff ]; then
+#     cd st-0.9 \
+#         && git am -3 ../custom-patches/st-wideglyph-0.9.diff \
+#         && cd ../
+# fi
+# # Wide Glyphs - disabled due to difficulties patching on top of ligatures }}}
 
 # OPTIONAL: rightclickpaste - Might not need since tmux takes over right click.
 # Default is middle click
@@ -172,10 +162,10 @@ cd st-0.8.4 \
 # # OPTIONAL: W3M Images {{{
 # if [ ! -s w3m.diff  ]; then
 #     curl \
-#         https://st.suckless.org/patches/w3m/st-w3m-0.8.3.diff \
+#         https://st.suckless.org/patches/w3m/st-w3m-0.9.diff \
 #         -o w3m.diff
 # fi
-# cd st-0.8.4 \
+# cd st-0.9 \
 #     && git am -3 ../w3m.diff \
 #     && cd ../
 # # OPTIONAL: W3M Images }}}

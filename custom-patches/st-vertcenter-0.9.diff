@@ -1,0 +1,70 @@
+From 6938e8f19ddba5cbd94b249f518e2aff1be535d8 Mon Sep 17 00:00:00 2001
+From: roket1428 <meorhan@protonmail.com>
+Date: Tue, 3 Oct 2023 11:10:39 +0300
+Subject: [PATCH] vertcenter patch
+
+Note: This patch depends on the boxdraw patch, and the ligatures-boxdraw
+patch. Please apply those patches before applying this one.
+
+Because it follows the "git --format-patch" file format, you may also
+use "git am" to apply this patch.
+---
+ x.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/x.c b/x.c
+index de88de5..fcb8b3f 100644
+--- a/x.c
++++ b/x.c
+@@ -85,6 +85,7 @@ typedef struct {
+ 	int hborderpx, vborderpx;
+ 	int ch; /* char height */
+ 	int cw; /* char width  */
++	int cyo; /* char y offset */
+ 	int mode; /* window state/mode flags */
+ 	int cursor; /* cursor style */
+ } TermWindow;
+@@ -1044,6 +1045,7 @@ xloadfonts(const char *fontstr, double fontsize)
+ 	/* Setting character width and height. */
+ 	win.cw = ceilf(dc.font.width * cwscale);
+ 	win.ch = ceilf(dc.font.height * chscale);
++	win.cyo = ceilf(dc.font.height * (chscale - 1) / 2);
+ 
+ 	FcPatternDel(pattern, FC_SLANT);
+ 	FcPatternAddInteger(pattern, FC_SLANT, FC_SLANT_ITALIC);
+@@ -1330,7 +1332,7 @@ xmakeglyphfontspecs(XftGlyphFontSpec *specs, const Glyph *glyphs, int len, int x
+ 	mode = prevmode = glyphs[0].mode;
+ 	xresetfontsettings(mode, &font, &frcflags);
+ 
+-	for (i = 0, xp = winx, yp = winy + font->ascent; i < len; ++i) {
++	for (i = 0, xp = winx, yp = winy + font->ascent + win.cyo; i < len; ++i) {
+ 		mode = glyphs[i].mode;
+ 
+ 		/* Skip dummy wide-character spacing. */
+@@ -1468,7 +1470,7 @@ xmakeglyphfontspecs(XftGlyphFontSpec *specs, const Glyph *glyphs, int len, int x
+ 			if (prevmode != mode) {
+ 				prevmode = mode;
+ 				xresetfontsettings(mode, &font, &frcflags);
+-				yp = winy + font->ascent;
++				yp = winy + font->ascent + win.cyo;
+ 			}
+ 		}
+ 	}
+@@ -1604,12 +1606,12 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
+ 
+ 	/* Render underline and strikethrough. */
+ 	if (base.mode & ATTR_UNDERLINE) {
+-		XftDrawRect(xw.draw, fg, winx, winy + dc.font.ascent * chscale + 1,
++		XftDrawRect(xw.draw, fg, winx, winy + win.cyo + dc.font.ascent * chscale + 1,
+ 				width, 1);
+ 	}
+ 
+ 	if (base.mode & ATTR_STRUCK) {
+-		XftDrawRect(xw.draw, fg, winx, winy + 2 * dc.font.ascent * chscale / 3,
++		XftDrawRect(xw.draw, fg, winx, winy + win.cyo + 2 * dc.font.ascent * chscale / 3,
+ 				width, 1);
+ 	}
+ 
+-- 
+2.43.0
+

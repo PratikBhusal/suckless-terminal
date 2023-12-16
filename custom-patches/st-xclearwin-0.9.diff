@@ -1,0 +1,62 @@
+From ab81a9eaf66b8ea570fed39fd3805633b9631c6a Mon Sep 17 00:00:00 2001
+From: Christian Tenllado <ctenllado@gmail.com>
+Date: Sun, 19 Apr 2020 11:57:31 +0200
+Subject: [PATCH] xclearwin clears the window
+
+When an OCS sequence was used to change the bg color, the borders where
+dirty. This simple patch just clears the window before the redraw of the
+terminal when the bg color has been changed. This is apparently enough
+and seams to be very smooth. There was a TODO comment for it on the st.c
+file, which I removed.
+---
+ st.c  | 6 ++----
+ win.h | 1 +
+ x.c   | 6 ++++++
+ 3 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/st.c b/st.c
+index 62def59..ef5fc29 100644
+--- a/st.c
++++ b/st.c
+@@ -1937,10 +1937,8 @@ strhandle(void)
+ 				fprintf(stderr, "erresc: invalid color j=%d, p=%s\n",
+ 				        j, p ? p : "(null)");
+ 			} else {
+-				/*
+-				 * TODO if defaultbg color is changed, borders
+-				 * are dirty
+-				 */
++				if (j == defaultbg)
++					xclearwin();
+ 				tfulldirt();
+ 			}
+ 			return;
+diff --git a/win.h b/win.h
+index 6de960d..34d8b8b 100644
+--- a/win.h
++++ b/win.h
+@@ -39,3 +39,4 @@ void xsetpointermotion(int);
+ void xsetsel(char *);
+ int xstartdraw(void);
+ void xximspot(int, int);
++void xclearwin(void);
+diff --git a/x.c b/x.c
+index 2a3bd38..2912df8 100644
+--- a/x.c
++++ b/x.c
+@@ -856,6 +856,12 @@ xclear(int x1, int y1, int x2, int y2)
+ 			x1, y1, x2-x1, y2-y1);
+ }
+ 
++void
++xclearwin(void)
++{
++	xclear(0, 0, win.w, win.h);
++}
++
+ void
+ xhints(void)
+ {
+-- 
+2.43.0
+

@@ -1,4 +1,4 @@
-From fb589cc5cb47fc6d303c5d7a6d8d79ad59b80cb7 Mon Sep 17 00:00:00 2001
+From 31ea85075d1233eb6b1e41fe184497680d478922 Mon Sep 17 00:00:00 2001
 From: PratikBhusal <PratikBhusal@users.noreply.github.com>
 Date: Sat, 22 May 2021 00:49:13 -0500
 Subject: [PATCH] Hide X cursor when key pressed in terminal window
@@ -10,7 +10,7 @@ Ivan Delalande - colona@ycc.fr
  1 file changed, 28 insertions(+), 4 deletions(-)
 
 diff --git a/x.c b/x.c
-index 210f184..24eac00 100644
+index 2a3bd38..b80a027 100644
 --- a/x.c
 +++ b/x.c
 @@ -103,6 +103,11 @@ typedef struct {
@@ -25,7 +25,7 @@ index 210f184..24eac00 100644
  	int scr;
  	int isfixed; /* is fixed geometry? */
  	int l, t; /* left and top offset */
-@@ -698,6 +703,13 @@ brelease(XEvent *e)
+@@ -716,6 +721,13 @@ brelease(XEvent *e)
  void
  bmotion(XEvent *e)
  {
@@ -39,7 +39,7 @@ index 210f184..24eac00 100644
  	if (IS_SET(MODE_MOUSE) && !(e->xbutton.state & forcemousemod)) {
  		mousereport(e);
  		return;
-@@ -1099,10 +1111,10 @@ void
+@@ -1130,10 +1142,10 @@ void
  xinit(int cols, int rows)
  {
  	XGCValues gcvalues;
@@ -51,7 +51,7 @@ index 210f184..24eac00 100644
  
  	if (!(xw.dpy = XOpenDisplay(NULL)))
  		die("can't open display\n");
-@@ -1166,8 +1178,9 @@ xinit(int cols, int rows)
+@@ -1197,8 +1209,9 @@ xinit(int cols, int rows)
  	}
  
  	/* white cursor, black outline */
@@ -63,7 +63,7 @@ index 210f184..24eac00 100644
  
  	if (XParseColor(xw.dpy, xw.cmap, colorname[mousefg], &xmousefg) == 0) {
  		xmousefg.red   = 0xffff;
-@@ -1181,7 +1194,10 @@ xinit(int cols, int rows)
+@@ -1212,7 +1225,10 @@ xinit(int cols, int rows)
  		xmousebg.blue  = 0x0000;
  	}
  
@@ -75,7 +75,7 @@ index 210f184..24eac00 100644
  
  	xw.xembed = XInternAtom(xw.dpy, "_XEMBED", False);
  	xw.wmdeletewin = XInternAtom(xw.dpy, "WM_DELETE_WINDOW", False);
-@@ -1674,6 +1690,8 @@ unmap(XEvent *ev)
+@@ -1721,6 +1737,8 @@ unmap(XEvent *ev)
  void
  xsetpointermotion(int set)
  {
@@ -84,7 +84,7 @@ index 210f184..24eac00 100644
  	MODBIT(xw.attrs.event_mask, set, PointerMotionMask);
  	XChangeWindowAttributes(xw.dpy, xw.win, CWEventMask, &xw.attrs);
  }
-@@ -1793,6 +1811,12 @@ kpress(XEvent *ev)
+@@ -1840,6 +1858,12 @@ kpress(XEvent *ev)
  	Status status;
  	Shortcut *bp;
  
@@ -98,5 +98,5 @@ index 210f184..24eac00 100644
  		return;
  
 -- 
-2.31.1
+2.43.0
 
